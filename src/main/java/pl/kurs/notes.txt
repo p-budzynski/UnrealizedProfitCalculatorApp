@@ -1,0 +1,12 @@
+Napisz w springu aplikacje która bedzie przeliczała Twoj niezrealizowany zysk, jezeli zainwestowałbys w konkretnej dacie, konkretna kwote.
+Wczytaj od uzytkownika walute, nastepnie kwote, oraz date potencjalnej inwestycji. Wczytaj rowniez date konca inwestycji
+(domyslnie jezeli nie podasz wartosci - wartosc pusta to data dzisiejsza)
+Musisz odczytac poprzez API kurs waluty wprowadzonej przez uzytkownika do dolara w okreslonym dniu.
+Nastepnie poprzez API odczytaj cene BTC/USD w podanej dacie.
+Wylicz zysk.
+Pamietaj ze broker zabiera swoją prowizje przy zakupie i sprzedazy, np. przy zakupie kupujesz tylko za 98,5% kwoty
+Natomiast przy sprzedazy, sprzedajesz za 99,1% kwoty.
+Niech te wartosci bedą konfigurowane w pliku application.properties.
+Dane o trasakacjach, tj. kursy w dniu zakupu, sprzedazy, zysk etc. niech zapisują się w bazie.
+
+Stworz beany do API, bean do serwisu przeliczajacego, bean do klasy ktora wczytuje dane.
