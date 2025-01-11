@@ -1,17 +1,14 @@
 package pl.kurs.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 @Configuration
 public class JpaConfiguration {
@@ -45,21 +42,6 @@ public class JpaConfiguration {
         adapter.setShowSql(true);
 
         return adapter;
-    }
-
-    @Bean
-    public RestTemplate createRestTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
-    public ObjectMapper createObjectMapper() {
-        return new ObjectMapper();
-    }
-
-    @Bean
-    public Scanner createScanner() {
-        return new Scanner(System.in);
     }
 
 }

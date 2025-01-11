@@ -23,22 +23,22 @@ public class InvestmentService {
     private final InvestmentDao investmentDao;
 
     public Investment calculateProfit(String currency, double amount, String startDate, String endDate) throws JsonProcessingException {
-        double purchaseRate = getPurchaseRate(currency, startDate);  //stawka zakupu usd
-        double sellRate = getSellRate(currency, endDate);  //stawka sprzedaży usd
+        double purchaseRate = getPurchaseRate(currency, startDate);
+        double sellRate = getSellRate(currency, endDate);
 
-        double btcStartPrice = cryptoCurrencyExchangeService.getCurrencyExchangeBtcHistorical(startDate);     //stawka zakupu btc
-        double btcEndPrice = (endDate == null) ? cryptoCurrencyExchangeService.getCurrencyExchangeBtc() :   //stawka sprzedaży btc
+        double btcStartPrice = cryptoCurrencyExchangeService.getCurrencyExchangeBtcHistorical(startDate);
+        double btcEndPrice = (endDate == null) ? cryptoCurrencyExchangeService.getCurrencyExchangeBtc() :
                 cryptoCurrencyExchangeService.getCurrencyExchangeBtcHistorical(endDate);
 
-        BigDecimal usdInvested = calculateUsdInvested(amount, purchaseRate, currency);     //ilość pieniędzy w usd
-        BigDecimal btcBought = usdInvested.divide(BigDecimal.valueOf(btcStartPrice), RoundingMode.HALF_UP)  //ilość btc
+        BigDecimal usdInvested = calculateUsdInvested(amount, purchaseRate, currency);
+        BigDecimal btcBought = usdInvested.divide(BigDecimal.valueOf(btcStartPrice), RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(brokerConfig.getBuyCommission()));
 
-        BigDecimal usdGained = btcBought.multiply(BigDecimal.valueOf(btcEndPrice))   //zamiana na usd
+        BigDecimal usdGained = btcBought.multiply(BigDecimal.valueOf(btcEndPrice))
                 .multiply(BigDecimal.valueOf(brokerConfig.getSellCommission()));
 
         if (!currency.equalsIgnoreCase("USD")) {
-            usdGained = usdGained.multiply(BigDecimal.valueOf(sellRate)         //zamiana na walute poczatkowa
+            usdGained = usdGained.multiply(BigDecimal.valueOf(sellRate)
                     .multiply(BigDecimal.valueOf(brokerConfig.getSellCommission())));
         }
 
@@ -53,14 +53,14 @@ public class InvestmentService {
         return investment;
     }
 
-    private double getPurchaseRate(String currency, String startDate) throws JsonProcessingException {
+    private double getPurchaseRate(String currency, String startDate) {
         if (currency.equalsIgnoreCase("USD")) {
             return 1;
         }
         return currencyExchangeService.getCurrencyExchangeHistorical(currency, startDate);
     }
 
-    private double getSellRate(String currency, String endDate) throws JsonProcessingException {
+    private double getSellRate(String currency, String endDate) {
         if (currency.equalsIgnoreCase("USD")) {
             return 1;
         }
