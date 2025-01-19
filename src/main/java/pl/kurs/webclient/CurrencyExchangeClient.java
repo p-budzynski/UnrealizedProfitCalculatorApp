@@ -1,9 +1,11 @@
 package pl.kurs.webclient;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import pl.kurs.model.CurrencyExchangeDto;
+
+import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
@@ -12,16 +14,18 @@ public class CurrencyExchangeClient {
     private static final String API_KEY = "cur_live_XvnzwAoaCuYS7ORvfzhf9jDiUFpvADVxVb2E3rkA";
     private final RestTemplate restTemplate;
 
-    public JsonNode getCurrencyExchange(String userCurrency) {
-        return restTemplate.getForObject(CURRENCY_URL +
-                "latest?apikey={apiKey}&currencies={userCurrency}",
-                JsonNode.class, API_KEY, userCurrency);
+    public double getCurrencyExchange(String userCurrency) {
+        return Objects.requireNonNull(restTemplate.getForObject(CURRENCY_URL +
+                                "latest?apikey={apiKey}&currencies={userCurrency}",
+                        CurrencyExchangeDto.class, API_KEY, userCurrency))
+                .getData().get(userCurrency).getValue();
     }
 
-    public JsonNode getCurrencyExchangeHistorical(String userCurrency, String date) {
-        return restTemplate.getForObject(CURRENCY_URL +
+    public double getCurrencyExchangeHistorical(String userCurrency, String date) {
+        return Objects.requireNonNull(restTemplate.getForObject(CURRENCY_URL +
                 "historical?apikey={apiKey}&currencies={userCurrency}&date={date}",
-                JsonNode.class, API_KEY, userCurrency, date);
+                CurrencyExchangeDto.class, API_KEY, userCurrency, date))
+                .getData().get(userCurrency).getValue();
     }
 
 }

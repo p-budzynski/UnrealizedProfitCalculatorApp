@@ -10,3 +10,7 @@ Niech te wartosci bedą konfigurowane w pliku application.properties.
 Dane o trasakacjach, tj. kursy w dniu zakupu, sprzedazy, zysk etc. niech zapisują się w bazie.
 
 Stworz beany do API, bean do serwisu przeliczajacego, bean do klasy ktora wczytuje dane.
+
+
+Dorobic drugi profil 'file' ktory bedzie zapisywal inwestycje do pliku
+Przerobic clienty, tak zeby zwracaly odpowiednie modele/dto a nie JsonNode/String

@@ -4,10 +4,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.PersistenceUnit;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import pl.kurs.entity.Investment;
 
 @Repository
+//@Profile("db")
 public class InvestmentDaoImpl implements InvestmentDao {
 
     @PersistenceUnit
