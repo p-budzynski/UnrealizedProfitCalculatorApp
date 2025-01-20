@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import pl.kurs.entity.Investment;
 
 @Repository
-//@Profile("db")
+@Profile("database")
 public class InvestmentDaoImpl implements InvestmentDao {
 
     @PersistenceUnit

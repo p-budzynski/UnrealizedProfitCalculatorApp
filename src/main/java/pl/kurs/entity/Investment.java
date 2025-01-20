@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class Investment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +59,16 @@ public class Investment {
         this.initialBtcRate = initialBtcRate;
         this.finalUsdRate = finalUsdRate;
         this.finalBtcRate = finalBtcRate;
+    }
+
+    @Override
+    public String toString() {
+        return "Investment: " + investmentAmount + " " + userCurrency +
+                "\nStart date: " + startDate + ", USD rate: " + initialUsdRate + " " + userCurrency +
+                ", BTC rate: " + initialBtcRate + " USD\n" +
+                "End date: " + endDate + ", USD rate: " + finalUsdRate + " " + userCurrency +
+                ", BTC rate: " + finalBtcRate + " USD\n" +
+                "Amount after investment: " + amountAfterInvestment +
+                ", Difference after investment: " + differenceAfterInvestment + "\n";
     }
 }
