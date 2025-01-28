@@ -1,15 +1,17 @@
 package pl.kurs;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import pl.kurs.entity.Investment;
+import pl.kurs.exception.InvestmentNotFoundException;
 import pl.kurs.service.InvestmentService;
 import pl.kurs.service.UserInputService;
 
+import java.io.IOException;
+
 @ComponentScan("pl.kurs")
 public class Application {
-    public static void main(String[] args) throws JsonProcessingException {
+    public static void main(String[] args) throws IOException, InvestmentNotFoundException {
 
         AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(Application.class);
 
@@ -24,6 +26,9 @@ public class Application {
         Investment investment = investmentService.calculateProfit(currency, amount, startDate, endDate);
 
         System.out.println("Profit: " + investment.getDifferenceAfterInvestment() + " " + currency);
+
+        System.out.println(investmentService.get(2L));
+
 
     }
 }

@@ -1,13 +1,14 @@
 package pl.kurs.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import pl.kurs.config.BrokerConfig;
 import pl.kurs.dao.InvestmentDao;
 import pl.kurs.entity.Investment;
+import pl.kurs.exception.InvestmentNotFoundException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public class InvestmentService {
     private final BrokerConfig brokerConfig;
     private final InvestmentDao investmentDao;
 
-    public Investment calculateProfit(String currency, double amount, String startDate, String endDate) throws JsonProcessingException {
+    public Investment calculateProfit(String currency, double amount, String startDate, String endDate) throws IOException {
         double purchaseRate = getPurchaseRate(currency, startDate);
         double sellRate = getSellRate(currency, endDate);
 
@@ -31,6 +32,7 @@ public class InvestmentService {
                 cryptoCurrencyExchangeService.getCurrencyExchangeBtcHistorical(endDate);
 
         BigDecimal usdInvested = calculateUsdInvested(amount, purchaseRate, currency);
+
         BigDecimal btcBought = usdInvested.divide(BigDecimal.valueOf(btcStartPrice), RoundingMode.HALF_UP)
                 .multiply(BigDecimal.valueOf(brokerConfig.getBuyCommission()));
 
@@ -42,8 +44,7 @@ public class InvestmentService {
                     .multiply(BigDecimal.valueOf(brokerConfig.getSellCommission())));
         }
 
-        BigDecimal profit = usdGained.subtract(BigDecimal.valueOf(amount))
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal profit = usdGained.subtract(BigDecimal.valueOf(amount));
 
         Investment investment = createInvestment(currency, amount, startDate, endDate, purchaseRate, sellRate,
                 btcStartPrice, btcEndPrice, usdGained, profit);
@@ -51,6 +52,10 @@ public class InvestmentService {
         investmentDao.save(investment);
 
         return investment;
+    }
+
+    public Investment get(Long id) throws InvestmentNotFoundException, IOException {
+        return investmentDao.get(id);
     }
 
     private double getPurchaseRate(String currency, String startDate) {
@@ -85,11 +90,11 @@ public class InvestmentService {
         investment.setAmountAfterInvestment(usdGained);
         investment.setStartDate(startDate);
         investment.setEndDate((endDate == null) ? LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) : endDate);
-        investment.setInitialUsdRate(BigDecimal.valueOf(purchaseRate));
-        investment.setInitialBtcRate(BigDecimal.valueOf(btcStartPrice));
-        investment.setFinalUsdRate(BigDecimal.valueOf(sellRate));
-        investment.setFinalBtcRate(BigDecimal.valueOf(btcEndPrice));
-        investment.setDifferenceAfterInvestment(profit);
+        investment.setInitialUsdRate(BigDecimal.valueOf(purchaseRate).setScale(2, RoundingMode.HALF_UP));
+        investment.setInitialBtcRate(BigDecimal.valueOf(btcStartPrice).setScale(2, RoundingMode.HALF_UP));
+        investment.setFinalUsdRate(BigDecimal.valueOf(sellRate).setScale(2, RoundingMode.HALF_UP));
+        investment.setFinalBtcRate(BigDecimal.valueOf(btcEndPrice).setScale(2, RoundingMode.HALF_UP));
+        investment.setDifferenceAfterInvestment(profit.setScale(2, RoundingMode.HALF_UP));
         return investment;
     }
 
